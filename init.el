@@ -2,6 +2,8 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+(load "~/.spacemacs.d/tyoverby.el")
+
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -296,54 +298,21 @@ values."
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
-   ))
-
-(defun dotspacemacs/user-init ()
-  "Initialization function for user code.
-It is called immediately after `dotspacemacs/init', before layer configuration
-executes.
- This function is mostly useful for variables that need to be set
-before packages are loaded. If you are unsure, you should try in setting them in
-`dotspacemacs/user-config' first."
-  (setq spacemacs-theme-comment-bg nil)
-  (setq powerline-image-apple-rgb 't)
-
-  ;; No bold!
-  (mapc
-   (lambda (face)
-     (when (eq (face-attribute face :weight) 'bold)
-       (set-face-attribute face nil :weight 'normal)))
-   (face-list))
+   )
+  (tyoverby/init)
   )
 
-(defun dotspacemacs/user-config ()
-  "Configuration function for user code.
-This function is called at the very end of Spacemacs initialization after
-layers configuration.
-This is the place where most of your configurations should be done. Unless it is
-explicitly specified that a variable should be set before a package is loaded,
-you should place your code here."
-
-  (setq neo-banner-message nil)
-  (setq neo-theme 'arrow)
-  (setq neo-window-position 'right)
-
-  (setq-default mode-line-format nil)
-  (setq powerline-default-separator nil)
-
-  (require 'real-auto-save)
-  (add-hook 'prog-mode-hook 'real-auto-save-mode)
-  (setq real-auto-save-interval 10)
-
-  (define-key evil-normal-state-map (kbd "TAB") 'neotree-toggle)
-  (define-key evil-normal-state-map (kbd "C-SPC") 'helm-buffers-list)
-  (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
-  (add-hook 'neotree-mode-hook
-            (lambda ()
-              (evilified-state-evilify-map neotree-mode-map
-                :mode neotree-mode
-                :bindings
-                (kbd "TAB")    'neotree-toggle
-                (kbd "C-SPC")  'neotree-toggle
-                (kbd "C-w")    'evil-window-prev)))
-  (fringe-mode 30))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (vi-tilde-fringe helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag ace-jump-helm-line ws-butler winum which-key wgrep volatile-highlights uuidgen utop use-package unfill tuareg toml-mode toc-org spaceline smex smeargle restart-emacs request real-auto-save rainbow-delimiters racer popwin persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file ocp-indent neotree mwim move-text mmm-mode merlin markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint ivy-hydra indent-guide hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish diff-hl define-word counsel-projectile company-statistics column-enforce-mode clean-aindent-mode cargo auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
