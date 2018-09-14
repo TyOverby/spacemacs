@@ -196,7 +196,7 @@ values."
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
-   dotspacemacs-helm-resize nil
+   dotspacemacs-helm-resize 't
    ;; if non nil, the helm header is hidden when there is only one source.
    ;; (default nil)
    dotspacemacs-helm-no-header 't
@@ -264,7 +264,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers  'relative
+   dotspacemacs-line-numbers nil
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -305,8 +305,15 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  (setq spacemacs-theme-comment-bg nil)
   (setq powerline-image-apple-rgb 't)
 
+  ;; No bold!
+  (mapc
+   (lambda (face)
+     (when (eq (face-attribute face :weight) 'bold)
+       (set-face-attribute face nil :weight 'normal)))
+   (face-list))
   )
 
 (defun dotspacemacs/user-config ()
@@ -316,8 +323,10 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
   (setq neo-banner-message nil)
   (setq neo-theme 'arrow)
+  (setq neo-window-position 'right)
 
   (setq-default mode-line-format nil)
   (setq powerline-default-separator nil)
@@ -325,30 +334,16 @@ you should place your code here."
   (require 'real-auto-save)
   (add-hook 'prog-mode-hook 'real-auto-save-mode)
   (setq real-auto-save-interval 10)
-  (evil-define-key 'normal neotree-mode-map (kbd "o") 'neotree-hide)
 
+  (define-key evil-normal-state-map (kbd "TAB") 'neotree-toggle)
+  (define-key evil-normal-state-map (kbd "C-SPC") 'helm-buffers-list)
+  (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
   (add-hook 'neotree-mode-hook
-    (lambda ()
-      (evilified-state-evilify-map neotree-mode-map
-        :mode neotree-mode
-        :bindings
-        (kbd "TAB")  'neotree-hide
-        (kbd "C-w")  'evil-window-prev)))
-)
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (real-auto-save toml-mode racer flycheck-rust cargo rust-mode helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag ace-jump-helm-line ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen utop use-package unfill tuareg toc-org spaceline smex smeargle restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file ocp-indent neotree mwim move-text mmm-mode merlin markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint ivy-hydra indent-guide hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish diff-hl define-word counsel-projectile company-statistics column-enforce-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+            (lambda ()
+              (evilified-state-evilify-map neotree-mode-map
+                :mode neotree-mode
+                :bindings
+                (kbd "TAB")    'neotree-toggle
+                (kbd "C-SPC")  'neotree-toggle
+                (kbd "C-w")    'evil-window-prev)))
+  (fringe-mode 30))
