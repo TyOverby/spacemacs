@@ -1,4 +1,30 @@
-(defun tyoverby/init ())
+(defun tyoverby/layers ()
+  (setq-default
+   dotspacemacs-configuration-layers
+   '(
+     helm
+     auto-completion
+     better-defaults
+     emacs-lisp
+     git
+     markdown
+     org
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom)
+     syntax-checking
+     version-control
+     )
+  dotspacemacs-additional-packages '(real-auto-save)
+  dotspacemacs-excluded-packages '(vi-tilde-fringe)))
+
+(defun tyoverby/init ()
+  (setq-default
+   dotspacemacs-default-font '("Source Code Pro" :size 14 :weight normal :width normal :powerline-scale 1.1)
+   dotspacemacs-remap-Y-to-y$ 't
+   dotspacemacs-helm-resize 't
+   dotspacemacs-helm-no-header 't
+   ))
 
 (defun dotspacemacs/user-init ()
   "Runs after `dotspacemacs/init', before layer configuration executes."
@@ -22,7 +48,7 @@
   (setq neo-banner-message nil)
   ;; Arrow neotree theme
   (setq neo-theme 'arrow)
-  ;; Neotree is on the right 
+  ;; Neotree is on the right
   (setq neo-window-position 'right)
 
   ;; No idea what this does
@@ -51,6 +77,4 @@
                 (kbd "C-SPC")  'neotree-toggle
                 (kbd "C-w")    'evil-window-prev)))
   ;; Heafty spacing on each buffer
-  (fringe-mode 30)
-  
-  )
+  (fringe-mode 30))
