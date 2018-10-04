@@ -6,6 +6,7 @@
      auto-completion
      better-defaults
      emacs-lisp
+     ocaml
      git
      markdown
      org
@@ -15,8 +16,8 @@
      syntax-checking
      version-control
      )
-  dotspacemacs-additional-packages '(real-auto-save)
-  dotspacemacs-excluded-packages '(vi-tilde-fringe)))
+   dotspacemacs-additional-packages '(real-auto-save flycheck-ocaml)
+   dotspacemacs-excluded-packages '(vi-tilde-fringe)))
 
 (defun tyoverby/init ()
   (setq-default
@@ -62,19 +63,39 @@
   (setq real-auto-save-interval 10)
 
   ;; Open neotree via tab in normal mode
-  (define-key evil-normal-state-map (kbd "TAB") 'neotree-toggle)
+  (define-key evil-normal-state-map (kbd "TAB") 'neotree-find-project-root)
   ;; Open buffers list on ctrl-space
   (define-key evil-normal-state-map (kbd "C-SPC") 'helm-buffers-list)
   ;; Open fuzzy finder with ctrl-p
   (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
   ;; In neotree, use Tab and ctrl-space to close it, ctrl-w to move away 
-  (add-hook 'neotree-mode-hook
-            (lambda ()
-              (evilified-state-evilify-map neotree-mode-map
-                :mode neotree-mode
-                :bindings
-                (kbd "TAB")    'neotree-toggle
-                (kbd "C-SPC")  'neotree-toggle
-                (kbd "C-w")    'evil-window-prev)))
+  (add-hook
+   'neotree-mode-hook
+   (lambda ()
+     (evilified-state-evilify-map neotree-mode-map
+       :mode neotree-mode
+       :bindings
+       (kbd "TAB")    'neotree-toggle
+       (kbd "C-SPC")  'neotree-toggle
+       (kbd "C-w")    'evil-window-prev)))
+
+  ;; (add-hook
+  ;;  'flycheck-mode-hook
+  ;;  (lambda ()
+  ;;    (evilified-state-evilify-map flycheck-error-list-mode-map
+  ;;      :mode flycheck-mode
+  ;;      :bindings
+  ;;      (kbd "C-w")    'evil-window-prev)))
+
+  ;; Flycheck + Ocaml
+  (with-eval-after-load 'merlin
+    ;; Disable Merlin's own error checking
+    (setq merlin-error-after-save nil)
+    ;; Enable Flycheck checker
+    (flycheck-ocaml-setup))
+
+  (add-hook 'tuareg-mode-hook #'merlin-mode)
+  (add-hook 'tuareg-mode-hook #'flycheck-mode)
+
   ;; Heafty spacing on each buffer
   (fringe-mode 30))
